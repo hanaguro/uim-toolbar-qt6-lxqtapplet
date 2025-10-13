@@ -1,0 +1,10 @@
+{
+    "PluginSettings": {
+        "Name": "UIM Toolbar",
+        "Comment": "UIM input method status toolbar for LXQt",
+        "Icon": "input-keyboard",
+        "Authors": "Takahiro Yoshizawa",
+        "Version": "1.0"
+    }
+}
+
