@@ -6,9 +6,9 @@ uim-toolbar-qt6-lxqtapplet
 Build
 -----
 
-mkdir build && cd build
-cmake -DCMAKE_BUILD_TYPE=Release ..
-make -j$(nproc)
+mkdir build && cd build  
+cmake -DCMAKE_BUILD_TYPE=Release ..  
+make -j$(nproc)  
 
 Install
 -----
