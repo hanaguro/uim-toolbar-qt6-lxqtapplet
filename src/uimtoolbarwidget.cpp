@@ -4,41 +4,53 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QMouseEvent>
+#include <QDebug>
 
 UimToolbarWidget::UimToolbarWidget(QWidget *parent)
     : QWidget(parent)
-    , m_label(new QLabel(this))
-    , m_client(new UimHelperClient(this))
 {
-    auto *lay = new QHBoxLayout(this);
-    lay->setContentsMargins(6, 0, 6, 0);
-    m_label->setText(QStringLiteral("…"));
-    lay->addWidget(m_label);
+    // レイアウト設定
+    auto *layout = new QHBoxLayout(this);
+    layout->setContentsMargins(4, 0, 4, 0);
+    layout->setSpacing(0);
 
-    connect(m_client, &UimHelperClient::stateChanged,
-            this, &UimToolbarWidget::onStateChanged);
-    connect(m_client, &UimHelperClient::errorText,
-            this, &UimToolbarWidget::onError);
+    // ラベル作成（初期値 "A"）
+    m_label = new QLabel(QStringLiteral("A"), this);
+    QFont font = m_label->font();
+    font.setBold(true);
+    font.setPointSizeF(font.pointSizeF() * 1.3); // 少し大きく
+    m_label->setFont(font);
+    m_label->setAlignment(Qt::AlignCenter);
+    m_label->setMinimumWidth(60);
+    m_label->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+    m_label->setTextFormat(Qt::PlainText);
+    m_label->setTextInteractionFlags(Qt::NoTextInteraction); // 編集や選択を無効化
 
-    // 起動時に一度問い合わせ
-    m_client->requestState();
+    layout->addWidget(m_label);
+    setLayout(layout);
+
+    // サイズヒント調整
+    setMinimumSize(60, 24);
+    setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+
+    // uim-helper クライアント接続
+    m_client = new UimHelperClient(this);
+    connect(m_client, &UimHelperClient::imStateChanged, this, [this](bool active) {
+        m_label->setText(active ? QStringLiteral("あ") : QStringLiteral("A"));
+    });
 }
 
-void UimToolbarWidget::mousePressEvent(QMouseEvent *ev) {
-    if (ev->button() == Qt::LeftButton) {
+QSize UimToolbarWidget::sizeHint() const
+{
+    // 横長のヒントを返す
+    return QSize(80, 24);
+}
+
+void UimToolbarWidget::mousePressEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::LeftButton && m_client) {
         m_client->requestToggle();
     }
-    QWidget::mousePressEvent(ev);
-}
-
-void UimToolbarWidget::onStateChanged(bool on, const QString &text) {
-    m_on = on;
-    // “あ/A” は helper 側から来た表示文字列を優先
-    m_label->setText(text.isEmpty() ? (on ? QStringLiteral("あ") : QStringLiteral("A")) : text);
-    setToolTip(on ? QStringLiteral("uim: ON") : QStringLiteral("uim: OFF"));
-}
-
-void UimToolbarWidget::onError(const QString &msg) {
-    setToolTip(msg);
+    QWidget::mousePressEvent(event);
 }
 

@@ -71,3 +71,24 @@ void ToolbarApplet::updateIcon()
     // test->show();
 }
 
+UimToolbarApplet::UimToolbarApplet(const ILXQtPanelPluginStartupInfo &startupInfo)
+    : QObject(startupInfo.parent)
+{
+    fprintf(stderr, "[uim-toolbar] UimToolbarApplet constructed\n");
+    fflush(stderr);
+
+    m_client = new UimHelperClient(this);
+    connect(m_client, &UimHelperClient::imStateChanged, this, &UimToolbarApplet::updateState);
+
+    m_client->connectToHelper();  // 👈 確実に呼ぶ
+
+    m_label = new QLabel("...", this);
+    m_label->setAlignment(Qt::AlignCenter);
+    m_label->setMinimumWidth(40);
+    m_label->setMaximumWidth(80);
+
+    setWidget(m_label);
+
+    fprintf(stderr, "[uim-toolbar] connectToHelper() invoked\n");
+    fflush(stderr);
+}
