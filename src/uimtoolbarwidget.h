@@ -1,9 +1,8 @@
-#pragma once
-
 #include <QWidget>
 #include <QLabel>
 
 class UimHelperClient;
+class QUimHelperToolbar;
 
 class UimToolbarWidget : public QWidget
 {
@@ -16,7 +15,8 @@ protected:
     void mousePressEvent(QMouseEvent *event) override;
 
 private:
-    QLabel *m_label = nullptr;
-    UimHelperClient *m_client = nullptr;
+    QLabel *m_label;
+    UimHelperClient *m_client;
+    QUimHelperToolbar *m_helperToolbar;  // ← 追加
 };
 

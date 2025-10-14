@@ -2,34 +2,36 @@
 #include <QObject>
 #include <QLocalSocket>
 #include <QTimer>
+#include <QDebug>
 
 class UimHelperClient : public QObject
 {
     Q_OBJECT
+
 public:
     explicit UimHelperClient(QObject *parent = nullptr);
+    ~UimHelperClient();
+
     void connectToHelper();
-    void requestStatus();
+    void sendCommand(const QString &cmd);
+    void requestState();
     void requestToggle();
+    void parseLine(const QString &line);
 
 signals:
-    void imStateChanged(bool active);
+    void stateChanged(const QString &state);  // e.g. "A", "あ"
+    void connected();
+    void disconnected();
 
 private slots:
     void onReadyRead();
-    void onReconnectTimeout();
+    void onConnected();
+    void onDisconnected();
 
 private:
-    void parseLine(const QString &line);
+    QLocalSocket *m_socket;
+    QString m_buffer;
 
-    QLocalSocket *m_socket = nullptr;
-    QTimer *m_reconnectTimer = nullptr;
-    QByteArray m_buffer;
-
-    void parseBuffer();
-    void processPropList(const QStringList &block);
-
-    QStringList m_currentBlock;
-    bool m_inPropList = false;
+    QString parseMessage(const QString &msg);
 };
 

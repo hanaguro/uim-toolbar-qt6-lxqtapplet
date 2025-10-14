@@ -5,7 +5,9 @@
 UimToolbarPlugin::UimToolbarPlugin(const ILXQtPanelPluginStartupInfo &startupInfo)
     : ILXQtPanelPlugin(startupInfo)  // ← ここが重要
 {
+#ifdef DEBUG_BUILD
     qDebug() << "UimToolbarPlugin created";
+#endif
     m_widget = new UimToolbarWidget();
 }
 
@@ -21,7 +23,9 @@ QWidget *UimToolbarPlugin::widget()
 
 ILXQtPanelPlugin *UimToolbarApplet::instance(const ILXQtPanelPluginStartupInfo &startupInfo) const
 {
+#ifdef DEBUG_BUILD
     qDebug() << "UimToolbarApplet::instance() called";
+#endif
     return new UimToolbarPlugin(startupInfo);
 }
 
