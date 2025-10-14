@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=LXQtPanel/Plugin
+X-LXQt-Module=uim-toolbar-qt6-lxqtapplet
+Name=UIM Toolbar
+Comment=UIM input method toolbar for LXQt panel
+Icon=input-keyboard
+X-LXQt-PluginInfo-Author=Takahiro Yoshizawa
+X-LXQt-PluginInfo-Version=1.0
+X-LXQt-PluginInfo-License=GPL
+X-LXQt-PluginInfo-Website=https://github.com/uim/uim
+
