@@ -1,6 +1,11 @@
+/* vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab: */
 #include <QWidget>
 #include <QLabel>
 
+// 前方宣言
+// クラスの存在だけをコンパイルに伝える。
+// ヘッダファイルをインクルードして、そのファイルにある全てのクラスを読み込まなくても良い。
+// ポインタや参照だけを使う場合は、中身を知らなくても良いので使える。
 class UimHelperClient;
 class QUimHelperToolbar;
 
@@ -15,7 +20,6 @@ protected:
     void mousePressEvent(QMouseEvent *event) override;
 
 private:
-    QLabel *m_label;
     UimHelperClient *m_client;
     QUimHelperToolbar *m_helperToolbar;  // ← 追加
 };

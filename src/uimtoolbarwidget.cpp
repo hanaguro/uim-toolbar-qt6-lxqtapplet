@@ -1,3 +1,4 @@
+/* vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab: */
 #include "uimtoolbarwidget.h"
 #include "uimhelperclient.h"
 #include "common-quimhelpertoolbar.h"
@@ -18,9 +19,10 @@ UimToolbarWidget::UimToolbarWidget(QWidget *parent)
 
     // --- UIセットアップ ---
     auto *layout = new QHBoxLayout(this);
-    layout->setContentsMargins(4, 0, 4, 0);
-    layout->setSpacing(0);
+    layout->setContentsMargins(4, 0, 4, 0);  // レイアウト全体の内側の余白（マージン）を設定する(枠との間の余白)
+    layout->setSpacing(0);  // ウィジェット同士の間隔を制御する
 
+/*
     // 初期状態は空文字（"..."は不要）
     m_label = new QLabel(QString(), this);
 
@@ -41,6 +43,7 @@ UimToolbarWidget::UimToolbarWidget(QWidget *parent)
     m_label->setTextInteractionFlags(Qt::NoTextInteraction);
     layout->addWidget(m_label);
     setLayout(layout);
+*/
 
     setMinimumSize(60, 24);
     setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
@@ -56,21 +59,6 @@ UimToolbarWidget::UimToolbarWidget(QWidget *parent)
     qDebug() << "Creating QUimHelperToolbar...";
 #endif
     m_helperToolbar = new QUimHelperToolbar(this, true);
-
-    // --- 状態更新シグナル接続 ---
-    connect(m_client, &UimHelperClient::stateChanged, this,
-            [this](const QString &state) {
-#ifdef DEBUG_BUILD
-                qDebug() << "uim stateChanged received:" << state;
-#endif
-                if (state == "あ") {
-                    m_label->setText(QStringLiteral("あ"));
-                } else if (state == "A") {
-                    m_label->setText(QStringLiteral("A"));
-                } else {
-                    m_label->clear();  // 空に戻す
-                }
-            });
 
     // --- uim-helper 接続 ---
 #ifdef DEBUG_BUILD
