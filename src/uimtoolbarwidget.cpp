@@ -22,29 +22,6 @@ UimToolbarWidget::UimToolbarWidget(QWidget *parent)
     layout->setContentsMargins(4, 0, 4, 0);  // レイアウト全体の内側の余白（マージン）を設定する(枠との間の余白)
     layout->setSpacing(0);  // ウィジェット同士の間隔を制御する
 
-/*
-    // 初期状態は空文字（"..."は不要）
-    m_label = new QLabel(QString(), this);
-
-    QFont font = m_label->font();
-    font.setBold(true);
-    font.setPointSizeF(font.pointSizeF() * 1.3);
-    m_label->setFont(font);
-
-    // LXQtテーマに合わせた文字色
-    QPalette pal = m_label->palette();
-    pal.setColor(QPalette::WindowText, QApplication::palette().color(QPalette::WindowText));
-    m_label->setPalette(pal);
-
-    m_label->setAlignment(Qt::AlignCenter);
-    m_label->setMinimumWidth(60);
-    m_label->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-    m_label->setTextFormat(Qt::PlainText);
-    m_label->setTextInteractionFlags(Qt::NoTextInteraction);
-    layout->addWidget(m_label);
-    setLayout(layout);
-*/
-
     setMinimumSize(60, 24);
     setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
