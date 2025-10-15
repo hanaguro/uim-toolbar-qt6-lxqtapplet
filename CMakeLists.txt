@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(uim-toolbar-qt6-lxqtapplet LANGUAGES CXX)
+project(uim-toolbar-qt6-lxqtwidget LANGUAGES CXX)
 
 # ==========================
 #  Step 1: Dummy config.h 生成
@@ -86,19 +86,19 @@ link_directories(
 # ==========================
 set(LXQT_PANEL_PLUGIN_DIR "/usr/lib/lxqt-panel")
 
-configure_file(${CMAKE_SOURCE_DIR}/src/uim-toolbar-qt6-lxqtapplet.json
-               ${CMAKE_CURRENT_BINARY_DIR}/uim-toolbar-qt6-lxqtapplet.json
+configure_file(${CMAKE_SOURCE_DIR}/src/uim-toolbar-qt6-lxqtwidget.json
+               ${CMAKE_CURRENT_BINARY_DIR}/uim-toolbar-qt6-lxqtwidget.json
                COPYONLY)
 
 # ==========================
 #  Step 6: ソース
 # ==========================
-add_library(uim-toolbar-qt6-lxqtapplet SHARED
+add_library(uim-toolbar-qt6-lxqtwidget SHARED
     src/main.cpp
     src/uimtoolbarwidget.cpp
     src/uimtoolbarplugin.cpp
     src/uimhelperclient.cpp
-    src/uim-toolbar-qt6-lxqtapplet.json
+    src/uim-toolbar-qt6-lxqtwidget.json
     ${CMAKE_SOURCE_DIR}/extern/uim/qt4/toolbar/common-quimhelpertoolbar.cpp
     ${CMAKE_SOURCE_DIR}/extern/uim/qt4/toolbar/common-uimstateindicator.cpp
 )
@@ -106,7 +106,7 @@ add_library(uim-toolbar-qt6-lxqtapplet SHARED
 # ==========================
 #  Step 7: インクルードパス
 # ==========================
-target_include_directories(uim-toolbar-qt6-lxqtapplet PRIVATE
+target_include_directories(uim-toolbar-qt6-lxqtwidget PRIVATE
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_BINARY_DIR}/generated/uim
     ${LXQT_INCLUDE_DIRS}
@@ -122,7 +122,7 @@ target_include_directories(uim-toolbar-qt6-lxqtapplet PRIVATE
 # ==========================
 #  Step 8: リンク
 # ==========================
-target_link_libraries(uim-toolbar-qt6-lxqtapplet
+target_link_libraries(uim-toolbar-qt6-lxqtwidget
     Qt6::Core
     Qt6::Widgets
     Qt6::Network
@@ -131,21 +131,21 @@ target_link_libraries(uim-toolbar-qt6-lxqtapplet
 )
 
 if (TARGET Qt6::Core5Compat)
-    target_link_libraries(uim-toolbar-qt6-lxqtapplet Qt6::Core5Compat)
+    target_link_libraries(uim-toolbar-qt6-lxqtwidget Qt6::Core5Compat)
 endif()
 
 # ==========================
 #  Step 9: インストール
 # ==========================
-install(TARGETS uim-toolbar-qt6-lxqtapplet
+install(TARGETS uim-toolbar-qt6-lxqtwidget
     LIBRARY DESTINATION ${LXQT_PANEL_PLUGIN_DIR}
 )
-install(FILES src/uim-toolbar-qt6-lxqtapplet.json
+install(FILES src/uim-toolbar-qt6-lxqtwidget.json
     DESTINATION ${LXQT_PANEL_PLUGIN_DIR}
 )
 
 set(LXQT_PANEL_DESKTOP_DIR "/usr/share/lxqt/lxqt-panel")
-install(FILES uim-toolbar-qt6-lxqtapplet.desktop
+install(FILES uim-toolbar-qt6-lxqtwidget.desktop
     DESTINATION ${LXQT_PANEL_DESKTOP_DIR}
 )
 

@@ -1,8 +1,8 @@
-$ cat /usr/share/lxqt/lxqt-panel/uim-toolbar-qt6-lxqtapplet.desktop 
+$ cat /usr/share/lxqt/lxqt-panel/uim-toolbar-qt6-lxqtwidget.desktop 
 [Desktop Entry]
 Type=Service
 ServiceTypes=LXQtPanel/Plugin
-X-LXQt-Module=uim-toolbar-qt6-lxqtapplet
+X-LXQt-Module=uim-toolbar-qt6-lxqtwidget
 Name=UIM Toolbar
 Comment=UIM input method toolbar for LXQt panel
 Icon=input-keyboard

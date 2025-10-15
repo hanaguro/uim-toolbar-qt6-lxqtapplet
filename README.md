@@ -1,12 +1,12 @@
 # README.md
 
-uim-toolbar-qt6-lxqtapplet
+uim-toolbar-qt6-lxqtwidget
 =======================
 
 Download
 -----
-git clone https://github.com/hanaguro/uim-toolbar-qt6-lxqtapplet.git  
-cd uim-toolbar-qt6-lxqtapplet  
+git clone https://github.com/hanaguro/uim-toolbar-qt6-lxqtwidget.git  
+cd uim-toolbar-qt6-lxqtwidget  
 git submodule init  
 git submodule update  
 

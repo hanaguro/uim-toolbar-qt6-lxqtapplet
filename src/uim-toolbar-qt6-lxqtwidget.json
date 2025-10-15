@@ -1,5 +1,5 @@
 {
-    "plugin": "uim-toolbar-qt6-lxqtapplet",
+    "plugin": "uim-toolbar-qt6-lxqtwidget",
     "name": "UIM Toolbar",
     "comment": "UIM input method status toolbar for LXQt",
     "icon": "input-keyboard",

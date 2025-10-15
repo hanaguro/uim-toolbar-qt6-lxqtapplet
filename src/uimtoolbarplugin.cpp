@@ -3,7 +3,8 @@
 #include <QDebug>
 
 UimToolbarPlugin::UimToolbarPlugin(const ILXQtPanelPluginStartupInfo &startupInfo)
-    : ILXQtPanelPlugin(startupInfo)  // ← ここが重要
+    : ILXQtPanelPlugin(startupInfo)	// 基底クラスのコンストラクタを呼び出す。
+					// これがないと基底クラスのデフォルトコンストラクタが呼び出される
 {
 #ifdef DEBUG_BUILD
     qDebug() << "UimToolbarPlugin created";
