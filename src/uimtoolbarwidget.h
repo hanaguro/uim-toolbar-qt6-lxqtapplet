@@ -20,7 +20,6 @@ protected:
     void mousePressEvent(QMouseEvent *event) override;
 
 private:
-    UimHelperClient *m_client;
     QUimHelperToolbar *m_helperToolbar;  // ← 追加
 };
 

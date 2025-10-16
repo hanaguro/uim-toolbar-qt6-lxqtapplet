@@ -97,7 +97,6 @@ add_library(uim-toolbar-qt6-lxqtwidget SHARED
     src/main.cpp
     src/uimtoolbarwidget.cpp
     src/uimtoolbarplugin.cpp
-    src/uimhelperclient.cpp
     src/uim-toolbar-qt6-lxqtwidget.json
     ${CMAKE_SOURCE_DIR}/extern/uim/qt4/toolbar/common-quimhelpertoolbar.cpp
     ${CMAKE_SOURCE_DIR}/extern/uim/qt4/toolbar/common-uimstateindicator.cpp
