@@ -7,7 +7,7 @@
 // ヘッダファイルをインクルードして、そのファイルにある全てのクラスを読み込まなくても良い。
 // ポインタや参照だけを使う場合は、中身を知らなくても良いので使える。
 class UimHelperClient;
-class QUimHelperToolbar;
+class ExtendedQUimHelperToolbar;
 
 class UimToolbarWidget : public QWidget
 {
@@ -20,6 +20,6 @@ protected:
     void mousePressEvent(QMouseEvent *event) override;
 
 private:
-    QUimHelperToolbar *m_helperToolbar;  // ← 追加
+    ExtendedQUimHelperToolbar *m_helperToolbar;  // ← 追加
 };
 
