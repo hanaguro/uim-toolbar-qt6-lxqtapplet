@@ -6,7 +6,6 @@
 // クラスの存在だけをコンパイルに伝える。
 // ヘッダファイルをインクルードして、そのファイルにある全てのクラスを読み込まなくても良い。
 // ポインタや参照だけを使う場合は、中身を知らなくても良いので使える。
-class UimHelperClient;
 class ExtendedQUimHelperToolbar;
 
 class UimToolbarWidget : public QWidget
