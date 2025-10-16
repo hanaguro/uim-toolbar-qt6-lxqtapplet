@@ -1,6 +1,6 @@
 /* vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab: */
 #include "uimtoolbarwidget.h"
-#include "extendedquimtoolbar.h"
+#include "common-quimhelpertoolbar.h"
 
 #include <QHBoxLayout>
 #include <QLabel>
@@ -28,7 +28,7 @@ UimToolbarWidget::UimToolbarWidget(QWidget *parent)
 #ifdef DEBUG_BUILD
     qDebug() << "Creating QUimHelperToolbar...";
 #endif
-    m_helperToolbar = new ExtendedQUimHelperToolbar(this, true);
+    m_helperToolbar = new QUimHelperToolbar(this, true);
 
     // 左右に空白スペーサを追加
     layout->addStretch(1);

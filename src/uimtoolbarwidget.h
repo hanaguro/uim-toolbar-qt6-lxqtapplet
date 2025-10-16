@@ -6,7 +6,7 @@
 // クラスの存在だけをコンパイルに伝える。
 // ヘッダファイルをインクルードして、そのファイルにある全てのクラスを読み込まなくても良い。
 // ポインタや参照だけを使う場合は、中身を知らなくても良いので使える。
-class ExtendedQUimHelperToolbar;
+class QUimHelperToolbar;
 
 class UimToolbarWidget : public QWidget
 {
@@ -19,6 +19,6 @@ protected:
     void mousePressEvent(QMouseEvent *event) override;
 
 private:
-    ExtendedQUimHelperToolbar *m_helperToolbar;  // ← 追加
+    QUimHelperToolbar *m_helperToolbar;  // ← 追加
 };
 
