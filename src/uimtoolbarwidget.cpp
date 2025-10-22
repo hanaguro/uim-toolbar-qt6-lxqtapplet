@@ -8,6 +8,11 @@
 #include <QDebug>
 #include <QPalette>
 #include <QApplication>
+#include <uim.h>
+#include <clocale>    // setlocale
+#include <libintl.h>  // bindtextdomain, bind_textdomain_codeset
+#include <config.h>   // PACKAGE, GETTEXT_PACKAGE, LOCALEDIR などのマクロ
+
 
 UimToolbarWidget::UimToolbarWidget(QWidget *parent)
     : QWidget(parent)
@@ -15,6 +20,12 @@ UimToolbarWidget::UimToolbarWidget(QWidget *parent)
 #ifdef DEBUG_BUILD
     qDebug() << "UimToolbarWidget constructed";
 #endif
+
+    setlocale(LC_ALL, "");
+    bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
+    bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
+
+    uim_init();
 
     // --- UIセットアップ ---
     auto *layout = new QHBoxLayout(this);

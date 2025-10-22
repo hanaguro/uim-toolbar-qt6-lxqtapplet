@@ -1,30 +1,65 @@
 cmake_minimum_required(VERSION 3.16)
 project(uim-toolbar-qt6-lxqtwidget LANGUAGES CXX)
 
+set(CMAKE_SKIP_INSTALL_ALL_DEPENDENCY ON)
+
 # ==========================
-#  Step 1: Dummy config.h 生成
+#  Step 1: uim autogen + configure 実行
 # ==========================
-set(UIM_DUMMY_CONFIG_MAIN ${CMAKE_SOURCE_DIR}/extern/uim/config.h)
-set(UIM_DUMMY_CONFIG_QT4  ${CMAKE_SOURCE_DIR}/extern/uim/qt4/toolbar/config.h)
+set(UIM_SRC_DIR    ${CMAKE_SOURCE_DIR}/extern/uim)
+set(UIM_BUILD_DIR  ${CMAKE_BINARY_DIR}/extern/uim)
+set(UIM_COPY_STAMP ${UIM_BUILD_DIR}/.sources-copied)
+set(UIM_CONFIGURE_SCRIPT ${UIM_BUILD_DIR}/configure)
+set(UIM_CONFIG_STATUS ${UIM_BUILD_DIR}/config.status)
+set(UIM_CONFIG_HEADER ${UIM_BUILD_DIR}/config.h)
+set(UIM_QT4_TOOLBAR_CONFIG ${UIM_BUILD_DIR}/qt4/toolbar/config.h)
 
-foreach(_cfg ${UIM_DUMMY_CONFIG_MAIN} ${UIM_DUMMY_CONFIG_QT4})
-    message(STATUS "Creating minimal dummy ${_cfg} ...")
-    get_filename_component(_cfg_dir ${_cfg} DIRECTORY)
-    file(MAKE_DIRECTORY ${_cfg_dir})
-    file(WRITE ${_cfg} "
-#ifndef UIM_CONFIG_H
-#define UIM_CONFIG_H
+add_custom_command(
+    OUTPUT ${UIM_COPY_STAMP}
+    COMMAND ${CMAKE_COMMAND} -E rm -rf ${UIM_BUILD_DIR}
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${UIM_SRC_DIR} ${UIM_BUILD_DIR}
+    COMMAND ${CMAKE_COMMAND} -E touch ${UIM_COPY_STAMP}
+    DEPENDS ${UIM_SRC_DIR}/autogen.sh
+    COMMENT "Copying uim sources into build tree"
+    VERBATIM
+)
 
-#define ENABLE_NLS 1
-#define PACKAGE \"uim\"
-#define VERSION \"1.9.6\"
-#define GETTEXT_PACKAGE \"uim\"
-#define UIM_PIXMAPSDIR \"/usr/share/uim/pixmaps\"
-#define KDE4_ICONDIR \"/usr/share/icons\"
+add_custom_command(
+    OUTPUT ${UIM_CONFIGURE_SCRIPT}
+    COMMAND ${CMAKE_COMMAND} -E env NOCONFIGURE=1 ./autogen.sh
+    WORKING_DIRECTORY ${UIM_BUILD_DIR}
+    DEPENDS ${UIM_COPY_STAMP}
+    COMMENT "Running uim autogen.sh"
+    VERBATIM
+)
 
-#endif /* UIM_CONFIG_H */
-")
-endforeach()
+add_custom_target(uim_autogen DEPENDS ${UIM_CONFIGURE_SCRIPT})
+
+add_custom_command(
+    OUTPUT ${UIM_CONFIG_STATUS} ${UIM_CONFIG_HEADER} ${UIM_QT4_TOOLBAR_CONFIG}
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${UIM_BUILD_DIR}
+    COMMAND ${CMAKE_COMMAND} -E env
+            CC=${CMAKE_C_COMPILER}
+            CXX=${CMAKE_CXX_COMPILER}
+            ./configure
+                --prefix=/usr
+		--libdir=/usr/lib
+		--sysconfdir=/etc
+		--localstatedir=/var
+		--mandir=/usr/share/man
+		--disable-static
+		--enable-shared
+		--with-qt6
+		--with-qt6-immodule
+    WORKING_DIRECTORY ${UIM_BUILD_DIR}
+    DEPENDS ${UIM_CONFIGURE_SCRIPT}
+    BYPRODUCTS ${UIM_BUILD_DIR}/Makefile
+    COMMENT "Configuring uim (extern/uim)"
+    VERBATIM
+)
+
+add_custom_target(uim_config ALL DEPENDS ${UIM_CONFIG_STATUS})
+add_dependencies(uim_config uim_autogen)
 
 # ==========================
 #  Step 2: uim/version.h 自動生成
@@ -106,16 +141,18 @@ add_library(uim-toolbar-qt6-lxqtwidget SHARED
 #  Step 7: インクルードパス
 # ==========================
 target_include_directories(uim-toolbar-qt6-lxqtwidget PRIVATE
+    ${UIM_BUILD_DIR}
+    ${UIM_BUILD_DIR}/replace
+    ${UIM_BUILD_DIR}/uim
+    ${UIM_BUILD_DIR}/uim/uim
+    ${UIM_BUILD_DIR}/qt4
+    ${UIM_BUILD_DIR}/qt4/toolbar
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_BINARY_DIR}/generated/uim
     ${LXQT_INCLUDE_DIRS}
     ${UIM_INCLUDE_DIRS}
     /usr/include/lxqt
     /usr/include/lxqt/LXQt
-    ${CMAKE_SOURCE_DIR}/extern/uim
-    ${CMAKE_SOURCE_DIR}/extern/uim/uim
-    ${CMAKE_SOURCE_DIR}/extern/uim/qt4
-    ${CMAKE_SOURCE_DIR}/extern/uim/qt4/toolbar
 )
 
 # ==========================
@@ -133,6 +170,8 @@ if (TARGET Qt6::Core5Compat)
     target_link_libraries(uim-toolbar-qt6-lxqtwidget Qt6::Core5Compat)
 endif()
 
+add_dependencies(uim-toolbar-qt6-lxqtwidget uim_config)
+
 # ==========================
 #  Step 9: インストール
 # ==========================
@@ -147,4 +186,3 @@ set(LXQT_PANEL_DESKTOP_DIR "/usr/share/lxqt/lxqt-panel")
 install(FILES uim-toolbar-qt6-lxqtwidget.desktop
     DESTINATION ${LXQT_PANEL_DESKTOP_DIR}
 )
-
