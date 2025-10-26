@@ -1,10 +1,10 @@
-cmake_minimum_required(VERSION 3.16)
-project(uim-toolbar-qt6-lxqtwidget LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.17)
+project(uim-toolbar-qt6-lxqtwidget LANGUAGES C CXX)
 
 set(CMAKE_SKIP_INSTALL_ALL_DEPENDENCY ON)
 
 # ==========================
-#  Step 1: uim autogen + configure 実行
+#  uim autogen + configure 実行
 # ==========================
 set(UIM_SRC_DIR    ${CMAKE_SOURCE_DIR}/extern/uim)
 set(UIM_BUILD_DIR  ${CMAKE_BINARY_DIR}/extern/uim)
@@ -62,22 +62,7 @@ add_custom_target(uim_config ALL DEPENDS ${UIM_CONFIG_STATUS})
 add_dependencies(uim_config uim_autogen)
 
 # ==========================
-#  Step 2: uim/version.h 自動生成
-# ==========================
-set(UIM_VERSION_MAJOR 1)
-set(UIM_VERSION_MINOR 9)
-set(UIM_VERSION_PATCHLEVEL 6)
-
-set(UIM_VERSION_IN  ${CMAKE_SOURCE_DIR}/extern/uim/uim/version.h.in)
-set(UIM_VERSION_OUT ${CMAKE_BINARY_DIR}/generated/uim/version.h)
-
-if (EXISTS ${UIM_VERSION_IN})
-    message(STATUS "Generating uim/version.h in build directory")
-    configure_file(${UIM_VERSION_IN} ${UIM_VERSION_OUT} @ONLY)
-endif()
-
-# ==========================
-#  Step 3: ビルド設定
+#  ビルド設定
 # ==========================
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
@@ -86,7 +71,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # ==========================
-#  Step 3.5: Debugマクロ設定
+#  Debugマクロ設定
 # ==========================
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_compile_definitions(DEBUG_BUILD)
@@ -96,7 +81,7 @@ else()
 endif()
 
 # ==========================
-#  Step 4: 依存関係
+#  依存関係
 # ==========================
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets Network)
 if (Qt6_VERSION VERSION_LESS "6.4.0")
@@ -107,23 +92,10 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(LXQT REQUIRED lxqt)
 pkg_check_modules(UIM REQUIRED uim)
 
-include_directories(
-    ${LXQT_INCLUDE_DIRS}
-    ${UIM_INCLUDE_DIRS}
-)
-link_directories(
-    ${LXQT_LIBRARY_DIRS}
-    ${UIM_LIBRARY_DIRS}
-)
-
 # ==========================
-#  Step 5: LXQt パネルプラグイン設定
+#  パネルプラグイン設定
 # ==========================
 set(LXQT_PANEL_PLUGIN_DIR "/usr/lib/lxqt-panel")
-
-configure_file(${CMAKE_SOURCE_DIR}/src/uim-toolbar-qt6-lxqtwidget.json
-               ${CMAKE_CURRENT_BINARY_DIR}/uim-toolbar-qt6-lxqtwidget.json
-               COPYONLY)
 
 # ==========================
 #  Step 6: ソース
@@ -132,7 +104,6 @@ add_library(uim-toolbar-qt6-lxqtwidget SHARED
     src/main.cpp
     src/uimtoolbarwidget.cpp
     src/uimtoolbarplugin.cpp
-    src/uim-toolbar-qt6-lxqtwidget.json
     ${CMAKE_SOURCE_DIR}/extern/uim/qt4/toolbar/common-quimhelpertoolbar.cpp
     ${CMAKE_SOURCE_DIR}/extern/uim/qt4/toolbar/common-uimstateindicator.cpp
 )
@@ -148,7 +119,6 @@ target_include_directories(uim-toolbar-qt6-lxqtwidget PRIVATE
     ${UIM_BUILD_DIR}/qt4
     ${UIM_BUILD_DIR}/qt4/toolbar
     ${CMAKE_CURRENT_BINARY_DIR}
-    ${CMAKE_BINARY_DIR}/generated/uim
     ${LXQT_INCLUDE_DIRS}
     ${UIM_INCLUDE_DIRS}
     /usr/include/lxqt
@@ -178,11 +148,24 @@ add_dependencies(uim-toolbar-qt6-lxqtwidget uim_config)
 install(TARGETS uim-toolbar-qt6-lxqtwidget
     LIBRARY DESTINATION ${LXQT_PANEL_PLUGIN_DIR}
 )
-install(FILES src/uim-toolbar-qt6-lxqtwidget.json
-    DESTINATION ${LXQT_PANEL_PLUGIN_DIR}
-)
 
 set(LXQT_PANEL_DESKTOP_DIR "/usr/share/lxqt/lxqt-panel")
 install(FILES uim-toolbar-qt6-lxqtwidget.desktop
     DESTINATION ${LXQT_PANEL_DESKTOP_DIR}
 )
+
+# ==========================
+#  make uninstall ターゲット
+# ==========================
+if(NOT TARGET uninstall)
+    configure_file(
+        "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
+        "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
+        IMMEDIATE @ONLY
+    )
+
+    add_custom_target(uninstall
+        COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake
+        COMMENT "Uninstalling files installed by 'make install'"
+    )
+endif()
