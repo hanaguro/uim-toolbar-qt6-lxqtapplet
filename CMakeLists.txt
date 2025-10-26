@@ -98,7 +98,7 @@ pkg_check_modules(UIM REQUIRED uim)
 set(LXQT_PANEL_PLUGIN_DIR "/usr/lib/lxqt-panel")
 
 # ==========================
-#  Step 6: ソース
+#  ソース
 # ==========================
 add_library(uim-toolbar-qt6-lxqtwidget SHARED
     src/main.cpp
@@ -109,7 +109,7 @@ add_library(uim-toolbar-qt6-lxqtwidget SHARED
 )
 
 # ==========================
-#  Step 7: インクルードパス
+#  インクルードパス
 # ==========================
 target_include_directories(uim-toolbar-qt6-lxqtwidget PRIVATE
     ${UIM_BUILD_DIR}
@@ -126,7 +126,7 @@ target_include_directories(uim-toolbar-qt6-lxqtwidget PRIVATE
 )
 
 # ==========================
-#  Step 8: リンク
+#  リンク
 # ==========================
 target_link_libraries(uim-toolbar-qt6-lxqtwidget
     Qt6::Core
@@ -143,7 +143,7 @@ endif()
 add_dependencies(uim-toolbar-qt6-lxqtwidget uim_config)
 
 # ==========================
-#  Step 9: インストール
+#  インストール
 # ==========================
 install(TARGETS uim-toolbar-qt6-lxqtwidget
     LIBRARY DESTINATION ${LXQT_PANEL_PLUGIN_DIR}
